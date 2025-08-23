@@ -17,6 +17,7 @@ export type Context = Awaited<ReturnType<typeof createTRPCContext>>;
 const trpc = initTRPC.context<Context>().create();
 
 export const router = trpc.router
+export const createCallerFactory = trpc.createCallerFactory;
 export const procedure = trpc.procedure;
 
 export const authProcedure = trpc.procedure.use(async function isAuthenticated(opts) {
