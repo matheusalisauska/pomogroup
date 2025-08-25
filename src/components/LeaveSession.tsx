@@ -2,12 +2,24 @@
 
 import { trpc } from "@/server/client";
 import { Button } from "./ui/button";
+import { LogOut } from "lucide-react";
 
 export function LeaveSession() {
-    const { mutate } = trpc.pomodoro.leaveSession.useMutation();
+    const utils = trpc.useUtils();
+    const { mutate, isPending } = trpc.pomodoroSessions.leaveSession.useMutation({
+        onSuccess: () => {
+            utils.users.getUsersWithSession.invalidate();
+        }
+    });
 
     return (
-        <Button variant={'destructive'} className="w-fit" onClick={() => mutate()}>Leave session</Button>
+        <button
+            disabled={isPending}
+            className="text-destructive"
+            onClick={() => mutate()
+            }>
+            <LogOut size={20} />
+        </button>
     )
 
 }

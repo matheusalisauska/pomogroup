@@ -3,11 +3,20 @@
 import { trpc } from "@/server/client";
 import { Button } from "./ui/button";
 
-export function LeaveSession() {
-    const { mutate } = trpc.pomodoro.leaveSession.useMutation();
+interface EnterSessionProps {
+    id: string;
+}
+
+export function EnterSession({ id }: EnterSessionProps) {
+    const utils = trpc.useUtils();
+    const { mutate, isPending } = trpc.pomodoroSessions.enterSession.useMutation({
+        onSuccess: () => {
+            utils.users.getUsersWithSession.invalidate();
+        }
+    });
 
     return (
-        <Button variant={'destructive'} className="w-fit" onClick={() => mutate()}>Leave session</Button>
+        <Button className="w-fit" disabled={isPending} onClick={() => mutate({ id })}>{isPending ? 'Entering...' : 'Enter session'}</Button>
     )
 
 }

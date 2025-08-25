@@ -8,10 +8,12 @@ import { trpc } from "@/server/client";
 import { EllipsisVertical } from "lucide-react";
 
 export function UserList() {
-    const { data: users, isFetching } = trpc.users.getUsersWithSession.useQuery();
+    const { data: users, isLoading } = trpc.users.getUsersWithSession.useQuery(undefined, {
+
+    });
     const participants = users?.currentSession?.participants
 
-    if (isFetching) {
+    if (isLoading) {
         return <UserListSkeleton />
     }
 
